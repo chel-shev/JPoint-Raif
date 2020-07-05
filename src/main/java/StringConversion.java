@@ -1,6 +1,7 @@
 class StringConversion {
 
     private final String oldString;
+    private StringBuilder newString;
 
     StringConversion(String string) {
         this.oldString = string;
@@ -14,15 +15,16 @@ class StringConversion {
     public String getConvertedString() {
         if (oldString == null || oldString.equals(""))
             return oldString;
-        final StringBuilder newString = new StringBuilder();
+        newString = new StringBuilder();
         int finishSequence = 0, startSequence = 0;
+        char charSequence = oldString.charAt(startSequence);
         for (; finishSequence < oldString.length(); finishSequence++) {
-            if (oldString.charAt(startSequence) != oldString.charAt(finishSequence)) {
-                newString.append(getNewPart(startSequence, finishSequence));
-                startSequence = finishSequence;
+            if (charSequence != oldString.charAt(finishSequence)) {
+                addNewPart(startSequence, finishSequence, charSequence);
+                charSequence = oldString.charAt(startSequence = finishSequence);
             }
         }
-        newString.append(getNewPart(startSequence, finishSequence));
+        addNewPart(startSequence, finishSequence, charSequence);
         return newString.toString();
     }
 
@@ -34,10 +36,9 @@ class StringConversion {
      *
      * @param start  - sequence start index
      * @param finish - sequence finish index
-     * @return result string
      */
-    private String getNewPart(int start, int finish) {
-        return (finish - start == 1 ? "" : finish - start) +
-                oldString.substring(start, start + 1);
+    private void addNewPart(int start, int finish, char mainChar) {
+        newString.append(finish - start == 1 ? "" : finish - start);
+        newString.append(mainChar);
     }
 }
